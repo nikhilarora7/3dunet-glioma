@@ -6,5 +6,5 @@ val_split=0.2
 workers=1
 weightpath=""
 checkpoint_savepath=""
-
+save_path=""
 #add your own data directory,weights path and checkpoint save path.

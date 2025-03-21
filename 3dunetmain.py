@@ -10,11 +10,11 @@ import os
 import numpy as np
 from torch.utils.data import DataLoader
 from sklearn.model_selection import train_test_split
-from src.configuration.config import data_dir,test_split,val_split,learning_rate,workers,n_epochs,weightpath,checkpoint_savepath
+from src.configuration.config import data_dir,test_split,val_split,learning_rate,workers,n_epochs,weightpath,checkpoint_savepath,save_path
 from src.Dataset.dataset import BraTSDataset
 from src.losses.hybridfocalloss import HybridLoss
 from src.training.trainer import train_epoch,validate_epoch
-
+from src.visualizations.visualization import plot_metrics
 def main():
     patients = os.listdir(data_dir)
 
@@ -42,6 +42,10 @@ def main():
     criterion = HybridLoss(device=device).to(device)
     num_epochs = n_epochs
     best_combined_tumor_dice = 0.0  # Best Dice score for tumor classes (1, 2, 3)
+
+    train_losses=[]
+    val_losses=[]
+    dice_scores=[]
 
     for epoch in range(num_epochs):
         print(f"\nEpoch {epoch + 1}/{num_epochs}")
@@ -72,8 +76,11 @@ def main():
             print(f"✅ Saved best model with Average Tumor Dice: {avg_tumor_dice:.4f} at :{checkpoint_savepath}")
 
         scheduler.step(avg_tumor_dice)
-
+        train_losses.append(train_loss)
+        val_losses.append(val_loss)
+        dice_scores.append(avg_tumor_dice)
     print("Training complete!")
+    plot_metrics(train_losses,val_losses,dice_scores,save_path)
 
 if __name__ == "__main__":
     main()
