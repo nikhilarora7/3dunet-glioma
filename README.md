@@ -2,8 +2,6 @@
 
 This repository contains the implementation of pytoch's 3D U-Net model for brain tumor segmentation using the BraTS2020 dataset.
 
-## Installation
-
 ## Prerequisites
 
 Ensure that you have the following installed:
